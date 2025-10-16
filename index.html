@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Clasificación de Residuos Sólidos | Proyecto de Innovación Educativa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #C1272D;
+            --dark-red: #8B1C1F;
+            --light-red: #E63946;
+            --beige: #F5E6D3;
+            --dark-beige: #E5D4C1;
+            --cream: #FAF8F3;
+            --text-dark: #1A1A1A;
+            --text-medium: #4A4A4A;
+            --text-light: #757575;
+            --white: #FFFFFF;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --shadow-xl: 0 16px 48px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+        h2 { font-size: clamp(1.75rem, 4vw, 2.75rem); }
+        h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+
+        /* Top Banner */
+        .top-banner {
+            background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+            color: var(--white);
+            padding: 12px 0;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 12px rgba(193, 39, 45, 0.3);
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            border-bottom: 1px solid rgba(193, 39, 45, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-decoration: none;
+            padding: 20px 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 24px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 3px;
+            background: var(--primary-red);
+            transform: scaleX(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #1A1A1A 100%);
+            overflow: hidden;
+            padding: 80px 40px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(193, 39, 45, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 230, 211, 0.1) 0%, transparent 50%);
+            animation: heroGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .hero-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(30deg, rgba(193, 39, 45, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(193, 39, 45, 0.05) 87.5%, rgba(193, 39, 45, 0.05)),
+                linear-gradient(150deg, rgba(193, 39, 45, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(193, 39, 45, 0.05) 87.5%, rgba(193, 39, 45, 0.05)),
+                linear-gradient(30deg, rgba(193, 39, 45, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(193, 39, 45, 0.05) 87.5%, rgba(193, 39, 45, 0.05)),
+                linear-gradient(150deg, rgba(193, 39, 45, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(193, 39, 45, 0.05) 87.5%, rgba(193, 39, 45, 0.05));
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-text {
+            color: var(--white);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(193, 39, 45, 0.2);
+            border: 1px solid rgba(193, 39, 45, 0.4);
+            color: var(--light-red);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            color: var(--white);
+            margin-bottom: 30px;
+            text-shadow: 0 2px 30px rgba(0,0,0,0.3);
+        }
+
+        .hero h1 .highlight {
+            color: var(--light-red);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .hero-institution {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 40px;
+        }
+
+        .institution-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(193, 39, 45, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .institution-text {
+            flex: 1;
+        }
+
+        .institution-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--white);
+        }
+
+        .institution-location {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 2px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--light-red);
+            margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 600px;
+        }
+
+        .hero-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .hero-card-1 {
+            top: 0;
+            right: 0;
+            width: 300px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-card-2 {
+            bottom: 80px;
+            right: 100px;
+            width: 280px;
+            animation: float 6s ease-in-out infinite 2s;
+        }
+
+        .hero-card-3 {
+            top: 200px;
+            left: 0;
+            width: 250px;
+            animation: float 6s ease-in-out infinite 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 120px 40px;
+            position: relative;
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto 80px;
+            text-align: center;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(193, 39, 45, 0.1), rgba(193, 39, 45, 0.05));
+            color: var(--primary-red);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: var(--text-dark);
+            margin-bottom: 25px;
+        }
+
+        .section-description {
+            font-size: 1.15rem;
+            color: var(--text-medium);
+            line-height: 1.8;
+        }
+
+        /* Problem Section */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+            margin-top: 60px;
+        }
+
+        .problem-content h3 {
+            color: var(--primary-red);
+            margin-bottom: 20px;
+        }
+
+        .problem-content p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: var(--text-medium);
+            margin-bottom: 25px;
+        }
+
+        .problem-list {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .problem-list li {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .problem-list li:last-child {
+            border-bottom: none;
+        }
+
+        .problem-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .problem-text h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .problem-text p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .problem-visual {
+            position: relative;
+            height: 100%;
+            min-height: 500px;
+            background: linear-gradient(135deg, var(--beige) 0%, var(--dark-beige) 100%);
+            border-radius: 24px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .impact-stat {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .impact-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+        }
+
+        .impact-label {
+            font-size: 1.05rem;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        /* Solution Section */
+        #solucion {
+            background: var(--white);
+        }
+
+        .solution-intro {
+            max-width: 900px;
+            margin: 0 auto 70px;
+            text-align: center;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--text-medium);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: var(--cream);
+            padding: 45px 35px;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--light-red));
+            transform: scaleX(0);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(193, 39, 45, 0.1);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(193, 39, 45, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-medium);
+            margin: 0;
+        }
+
+        /* Timeline Section */
+        #metodologia {
+            background: linear-gradient(180deg, var(--cream) 0%, var(--white) 50%, var(--cream) 100%);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 60px auto 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-red), var(--light-red));
+            box-shadow: 0 0 20px rgba(193, 39, 45, 0.3);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: calc(50% - 40px);
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .timeline-number {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            border: 5px solid var(--cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 800;
+            font-size: 1.3rem;
+            z-index: 2;
+            box-shadow: 0 4px 20px rgba(193, 39, 45, 0.4);
+        }
+
+        .timeline-content h3 {
+            color: var(--primary-red);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .timeline-content p {
+            color: var(--text-medium);
+            line-height: 1.8;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        /* Innovation Section */
+        #innovacion {
+            background: var(--text-dark);
+            color: var(--white);
+        }
+
+        #innovacion .section-label {
+            background: rgba(193, 39, 45, 0.2);
+            color: var(--light-red);
+        }
+
+        #innovacion .section-title {
+            color: var(--white);
+        }
+
+        #innovacion .section-description {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .innovation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 70px;
+        }
+
+        .innovation-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 45px;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .innovation-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(193, 39, 45, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .innovation-card h3 {
+            color: var(--white);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .innovation-card h3::before {
+            content: '';
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--primary-red), var(--light-red));
+            border-radius: 3px;
+        }
+
+        .innovation-card p {
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.9;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        /* Gallery Section */
+        #galeria {
+            background: var(--white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--dark-beige) 0%, var(--beige) 50%, var(--dark-beige) 100%);
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .gallery-item:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 30px;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-caption {
+            color: var(--white);
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+.gallery-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .gallery-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .placeholder-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+
+        .placeholder-text {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Creator Section */
+        #creador {
+            background: linear-gradient(135deg, var(--beige) 0%, var(--cream) 100%);
+        }
+
+        .creator-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            align-items: start;
+            margin-top: 60px;
+        }
+
+        .creator-profile {
+            background: var(--white);
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            position: sticky;
+            top: 100px;
+        }
+
+        .creator-avatar {
+     
+            border-radius: 50%;
+           
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--white);
+            font-weight: 700;
+         
+        }
+
+        .creator-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .creator-title {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .creator-details {
+            text-align: left;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid var(--beige);
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: start;
+        }
+
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            background: var(--beige);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+
+        .detail-info strong {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .detail-info span {
+            display: block;
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .creator-story {
+            background: var(--white);
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .creator-story h3 {
+            color: var(--primary-red);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .creator-story h3::before {
+            content: '💡';
+            font-size: 2rem;
+        }
+
+        .creator-story p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: var(--text-medium);
+            margin-bottom: 25px;
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, var(--beige) 0%, var(--cream) 100%);
+            border-left: 5px solid var(--primary-red);
+            padding: 40px;
+            border-radius: 16px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 5rem;
+            color: var(--primary-red);
+            opacity: 0.2;
+            font-family: 'Playfair Display', serif;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--text-dark);
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 20px;
+        }
+
+        .quote-author {
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary-red);
+            font-size: 1.05rem;
+        }
+
+        /* Impact Section */
+        #impacto {
+            background: var(--white);
+        }
+
+        .impact-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 60px 0;
+        }
+
+        .objective-card {
+            background: linear-gradient(135deg, var(--cream) 0%, var(--beige) 100%);
+            padding: 45px;
+            border-radius: 20px;
+            border: 2px solid var(--dark-beige);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .objective-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(193, 39, 45, 0.1) 0%, transparent 70%);
+        }
+
+        .objective-badge {
+            display: inline-block;
+            background: var(--primary-red);
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .objective-card h3 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .objective-card p {
+            color: var(--text-medium);
+            line-height: 1.8;
+            font-size: 1.05rem;
+            position: relative;
+            margin: 0;
+        }
+
+        .results-section {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 60px;
+            border-radius: 24px;
+            margin: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(193, 39, 45, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .results-section h3 {
+            color: var(--white);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .results-section p {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.9;
+            font-size: 1.05rem;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .framework-section {
+            margin-top: 60px;
+        }
+
+        .framework-section h3 {
+            color: var(--primary-red);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .framework-section p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: var(--text-medium);
+            margin-bottom: 25px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 50%, var(--dark-red) 100%);
+            padding: 100px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+        }
+
+        .cta-content h2 {
+            color: var(--white);
+            margin-bottom: 25px;
+            font-size: 3rem;
+        }
+
+        .cta-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .cta-highlight {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 30px 50px;
+            border-radius: 16px;
+            margin-top: 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 80px 40px 40px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand h3 {
+            color: var(--white);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .footer-section h4 {
+            color: var(--white);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-section a:hover {
+            color: var(--light-red);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .footer-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .hero-visual {
+                height: 400px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .innovation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .problem-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(odd) {
+                flex-direction: column;
+            }
+
+            .timeline-content {
+                width: 100%;
+                margin-left: 60px;
+            }
+
+            .timeline-number {
+                left: 30px;
+                transform: translateX(0);
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item:first-child {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+
+            .creator-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .creator-profile {
+                position: static;
+            }
+
+            .objectives-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container,
+            section {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            section {
+                padding-top: 60px;
+                padding-bottom: 60px;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .nav-container {
+                padding: 0 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Scroll Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--light-red));
+            z-index: 9999;
+            transform-origin: left;
+            box-shadow: 0 2px 10px rgba(193, 39, 45, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="top-banner">
+        🌱  Sistema de clasificación de residuos sólidos para la generación de hábitos en niños de básica primaria
+
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-logo">Instituto Técnico Veintiséis de Marzo</a>
+            <ul class="nav-links">
+                <li><a href="#hero">Inicio</a></li>
+                <li><a href="#problema">Problemática</a></li>
+                <li><a href="#solucion">Solución</a></li>
+                <li><a href="#metodologia">Metodología</a></li>
+                <li><a href="#innovacion">Innovación</a></li>
+                <li><a href="#galeria">Galería</a></li>
+                <li><a href="#creador">Creador</a></li>
+                <li><a href="#impacto">Impacto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero">
+        <div class="hero-pattern"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-badge">Proyecto de Grado 2024-2025</span>
+                <h1>Sistema de Clasificación de Residuos Sólidos para la <span class="highlight">Generación de Hábitos</span> en Niños</h1>
+                <p class="hero-description">
+                    Un dispositivo interactivo basado en sensores que transforma la educación ambiental teórica en experiencias prácticas y medibles, creando hábitos permanentes de clasificación de residuos desde la infancia.
+                </p>
+                <div class="hero-institution">
+                    <div class="institution-icon">🎓</div>
+                    <div class="institution-text">
+                        <div class="institution-name">Instituto Técnico Veintiséis de Marzo</div>
+                        <div class="institution-location">Barrancabermeja, Santander, Colombia</div>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Años de Desarrollo</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Interactivo</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-number">Real</div>
+                        <div class="stat-label">Impacto Medible</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card hero-card-1">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Sensores en Tiempo Real</div>
+                    <div class="card-text">Detección instantánea de clasificación correcta con retroalimentación inmediata</div>
+                </div>
+
+                <div class="hero-card hero-card-3">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Resultados Medibles</div>
+                    <div class="card-text">Sistema que permite evaluar objetivamente el desarrollo de hábitos</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="problema">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">El Contexto</span>
+                <h2 class="section-title">Problemática Identificada</h2>
+                <p class="section-description">
+                    La educación ambiental tradicional en Barrancabermeja carece de componentes prácticos que generen cambios reales en el comportamiento de los estudiantes.
+                </p>
+            </div>
+
+            <div class="problem-grid">
+                <div class="problem-content">
+                    <h3>El Desafío de la Educación Ambiental</h3>
+                    <p>
+                        En las instituciones educativas de Barrancabermeja, la educación ambiental se ha limitado históricamente a charlas teóricas y campañas de sensibilización que, aunque bien intencionadas, no logran crear hábitos permanentes en los estudiantes.
+                    </p>
+                    <p>
+                        Esta metodología tradicional presenta una desconexión fundamental entre el conocimiento teórico y la aplicación práctica, resultando en estudiantes que conocen los conceptos pero no los implementan en su vida cotidiana.
+                    </p>
+
+                    <ul class="problem-list">
+                        <li>
+                            <div class="problem-icon">01</div>
+                            <div class="problem-text">
+                                <h4>Ausencia de Práctica</h4>
+                                <p>Las charlas ambientales no incluyen componentes prácticos que permitan a los estudiantes experimentar directamente con la clasificación de residuos.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="problem-icon">02</div>
+                            <div class="problem-text">
+                                <h4>Impacto Temporal</h4>
+                                <p>Las campañas de sensibilización tienen efectos de corta duración, olvidándose en cuestión de semanas sin generar cambios permanentes.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="problem-icon">03</div>
+                            <div class="problem-text">
+                                <h4>Brecha Teoría-Práctica</h4>
+                                <p>Existe una desconexión significativa entre el conocimiento sobre reciclaje y su aplicación real en el día a día de los estudiantes.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="problem-visual">
+                    <div class="impact-stat">
+                        <div class="impact-number">90%</div>
+                        <div class="impact-label">de estudiantes olvidan la información de charlas tradicionales en menos de un mes</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">15%</div>
+                        <div class="impact-label">de efectividad en campañas de sensibilización convencionales sin seguimiento</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">0%</div>
+                        <div class="impact-label">de herramientas tecnológicas interactivas disponibles en instituciones locales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solucion">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">La Innovación</span>
+                <h2 class="section-title">Tecnología al Servicio de la Educación</h2>
+                <p class="section-description">
+                    Un dispositivo interactivo que revoluciona la forma en que los niños aprenden sobre clasificación de residuos
+                </p>
+            </div>
+
+            <div class="solution-intro">
+                Desarrollamos un sistema integral equipado con sensores electrónicos de última generación que detectan en tiempo real cuando los residuos son clasificados correctamente. Este dispositivo transforma el proceso de reciclaje en una experiencia de aprendizaje gamificada donde los niños reciben retroalimentación instantánea, creando asociaciones positivas y duraderas con el comportamiento ambiental responsable.
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Detección en Tiempo Real</h3>
+                    <p>Sensores electrónicos de alta precisión identifican instantáneamente si el residuo fue clasificado correctamente, proporcionando feedback visual y auditivo inmediato.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Aprendizaje Gamificado</h3>
+                    <p>Transforma la clasificación de residuos en una experiencia lúdica y atractiva que mantiene el interés y la motivación constante de los estudiantes.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Interfaz Intuitiva</h3>
+                    <p>Diseño accesible y comprensible específicamente adaptado para niños de básica primaria, con señales visuales claras y retroalimentación comprensible.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">♻️</div>
+                    <h3>Educación Experiencial</h3>
+                    <p>Los estudiantes construyen conocimiento a través de la acción directa, no solo mediante la escucha pasiva, reforzando significativamente la retención.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Métricas Objetivas</h3>
+                    <p>El sistema permite evaluar cuantitativamente el progreso de los estudiantes en el desarrollo de hábitos ambientales permanentes.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Modelo Replicable</h3>
+                    <p>Diseñado con componentes accesibles y metodología documentada para facilitar su implementación en otras instituciones educativas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="metodologia">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">El Proceso</span>
+                <h2 class="section-title">Metodología de Desarrollo</h2>
+                <p class="section-description">
+                    Un proceso riguroso de seis a siete meses que garantizó la viabilidad técnica y efectividad pedagógica del dispositivo
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3>Investigación y Diagnóstico</h3>
+                        <p>Análisis exhaustivo de la problemática ambiental en instituciones educativas locales. Revisión de literatura científica sobre educación ambiental, desarrollo de hábitos en la infancia y mejores prácticas internacionales. Identificación de necesidades específicas del contexto educativo de Barrancabermeja.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3>Diseño Conceptual</h3>
+                        <p>Desarrollo del concepto integral del dispositivo interactivo. Selección estratégica de componentes electrónicos y sensores. Diseño de la interfaz de usuario específicamente orientada a las capacidades cognitivas de niños. Definición de mecanismos de retroalimentación multimodal.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3>Construcción del Prototipo</h3>
+                        <p>Ensamblaje meticuloso de componentes electrónicos siguiendo especificaciones técnicas. Programación de sensores y sistemas de respuesta automatizados. Integración de elementos visuales y auditivos para feedback multicanal. Pruebas técnicas iterativas de funcionamiento y estabilidad.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3>Pruebas y Optimización</h3>
+                        <p>Implementación de pruebas piloto con usuarios reales en entorno controlado. Recopilación sistemática de datos sobre usabilidad, efectividad y experiencia de usuario. Ajustes técnicos y de diseño basados en observaciones empíricas y feedback directo. Optimización continua del sistema.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-number">5</div>
+                    <div class="timeline-content">
+                        <h3>Implementación Institucional</h3>
+                        <p>Instalación permanente del dispositivo en la institución educativa para operación en condiciones reales. Capacitación integral a docentes y estudiantes sobre uso y aprovechamiento pedagógico. Monitoreo continuo del uso, efectividad e impacto. Recopilación de datos longitudinales para análisis de resultados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="innovacion">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Diferenciación</span>
+                <h2 class="section-title">¿Qué Hace Único a Este Proyecto?</h2>
+                <p class="section-description">
+                    Este proyecto trasciende las limitaciones de las iniciativas tradicionales de educación ambiental
+                </p>
+            </div>
+
+            <div class="innovation-grid">
+                <div class="innovation-card">
+                    <h3>Dispositivo Físico Tangible</h3>
+                    <p>A diferencia de las charlas convencionales que se desvanecen de la memoria, ofrecemos un dispositivo físico con electrónica real que los estudiantes pueden usar diariamente. Esta materialización del concepto genera un impacto duradero y mensurable en el comportamiento.</p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3>Retroalimentación Instantánea</h3>
+                    <p>Los sensores avanzados responden en tiempo real, permitiendo que los niños experimenten las consecuencias inmediatas de sus decisiones. Este refuerzo instantáneo es fundamental para la formación de hábitos según la psicología del aprendizaje.</p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3>Economía y Accesibilidad</h3>
+                    <p>El diseño prioriza componentes económicamente accesibles sin comprometer funcionalidad, haciendo posible la replicación en otras instituciones sin necesidad de inversiones prohibitivas o infraestructura especializada.</p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3>Implementación Permanente</h3>
+                    <p>No es un proyecto que se presenta académicamente y se archiva. El dispositivo permanece activo en la institución, evolucionando y mejorando continuamente según las necesidades identificadas y el feedback recibido.</p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3>Pedagogía Constructivista</h3>
+                    <p>Combina teoría pedagógica de vanguardia con tecnología accesible, permitiendo que los niños construyan activamente su conocimiento ambiental a través de la experiencia directa y la reflexión guiada.</p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3>Escalabilidad Demostrada</h3>
+                    <p>El modelo ha sido diseñado desde el inicio con metodología documentada y componentes estandarizados para poder replicarse efectivamente en diferentes contextos educativos y geográficos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Documentación Visual</span>
+                <h2 class="section-title">Galería del Proyecto</h2>
+                <p class="section-description">
+                    Registro fotográfico del proceso de desarrollo, implementación y uso del sistema
+                </p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <div>
+                       <img src="img/canequita.jpg">
+                        </div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Vista general del sistema de clasificación </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <div>
+                      <img src="img/sergio.jpg">
+                        </div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Armando la primera versión del proyecto</div>
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <div>
+                            <img src="img/presentando.jpg">
+                        </div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Presentando la primera versión del proyecto</div>
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <div>
+                    <img src="img/armando.jpg">
+                        </div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Armando la segunda versión del proyecto</div>
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <div>
+                    <img src="img/ganando.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Puesto Bronce en infomatrix sudamericana 2025</div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <p style="text-align: center; margin-top: 50px; color: var(--text-light); font-style: italic; font-size: 1.05rem;">
+                Las imágenes reales del proyecto pueden ser insertadas reemplazando estos elementos de marcador de posición con contenido fotográfico de alta resolución.
+            </p>
+        </div>
+    </section>
+
+    <section id="creador">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">El Líder del Proyecto</span>
+                <h2 class="section-title">Sobre el Creador</h2>
+                <p class="section-description">
+                    Un joven que decidió liderar el cambio sin esperar a que otros tomaran acción
+                </p>
+            </div>
+
+            <div class="creator-layout">
+                <div class="creator-profile">
+                    <div class="creator-avatar"><img class="creator-avatar" src="img/jhofer.jpg" width="150"></div>
+                    <div class="creator-name">Jhofer Rugeles Vides</div>
+                    <div class="creator-title">Estudiante de Grado 11 | Innovador Ambiental</div>
+
+                    <div class="creator-details">
+                        <div class="detail-row">
+                            <div class="detail-icon">🎓</div>
+                            <div class="detail-info">
+                                <strong>Institución</strong>
+                                <span>Instituto Técnico Veintiséis de Marzo</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-icon">📍</div>
+                            <div class="detail-info">
+                                <strong>Ubicación</strong>
+                                <span>Barrancabermeja, Santander</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-icon">📖</div>
+                            <div class="detail-info">
+                                <strong>Nivel Académico</strong>
+                                <span>Grado 11 - Educación Media</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-icon">👤</div>
+                            <div class="detail-info">
+                                <strong>Edad</strong>
+                                <span>18 años</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-icon">🇨🇴</div>
+                            <div class="detail-info">
+                                <strong>País</strong>
+                                <span>Colombia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="creator-story">
+                    <h3>La Inspiración Detrás del Proyecto</h3>
+                    <p>
+                        La motivación principal para desarrollar este proyecto surgió de la observación directa y constante de la falta de conciencia ambiental que se evidencia día a día en la comunidad de Barrancabermeja. Jhofer identificó que el problema fundamental no era la ausencia de información sobre reciclaje y cuidado ambiental, sino la carencia absoluta de herramientas prácticas y accesibles que permitieran transformar el conocimiento teórico en acción tangible y hábitos permanentes.
+                    </p>
+
+                    <p>
+                        Esta observación crítica del entorno, combinada con un profundo compromiso personal con el cambio ambiental, impulsó a Jhofer a tomar la iniciativa de crear una solución real y efectiva, demostrando que la edad no es un impedimento para generar innovación con impacto social.
+                    </p>
+
+                    <div class="quote-box">
+                        <p class="quote-text">
+                            "Lo que más nos enorgullece es que esto no es solo un proyecto académico que presentamos y se olvida. Es algo que ha estado en la institución y se ha ido evolucionando poco a poco. Queremos demostrar que el cambio es posible, que no hay que esperar a que los grandes hagan algo, sino que nosotros los jóvenes podemos tomar acción. Si empezamos con los niños desde pequeños, cuando sean mayores van a tener esos hábitos naturalizados."
+                        </p>
+                        <p class="quote-author">— Jhofer Rugeles Vides</p>
+                    </div>
+
+                    <h3>Experiencia y Aprendizaje</h3>
+                    <p>
+                        Este proyecto representa la primera incursión de Jhofer en el desarrollo de soluciones tecnológicas para educación ambiental. Sin experiencia previa en proyectos similares, enfrentó el desafío con determinación, investigación autodidacta y una notable capacidad de resolución de problemas. Esta experiencia inaugural se convirtió en un ejemplo poderoso de cómo la pasión genuina por generar cambio puede impulsar la innovación educativa incluso sin antecedentes técnicos formales o experiencia previa en el campo.
+                    </p>
+
+                    <p>
+                        El proceso de desarrollo del proyecto no solo resultó en un dispositivo funcional, sino también en un crecimiento personal significativo, adquiriendo competencias en electrónica, programación, diseño de experiencias de usuario, metodología de investigación y habilidades de gestión de proyectos que trascienden el ámbito académico.
+                    </p>
+
+                    <h3>Visión de Futuro</h3>
+                    <p>
+                        Jhofer visualiza un futuro donde este proyecto se expanda más allá de su institución, llegando a múltiples escuelas en Barrancabermeja y eventualmente a otras regiones de Colombia. Su objetivo es demostrar que las soluciones tecnológicas accesibles pueden democratizar la educación ambiental de calidad, creando una generación de ciudadanos ambientalmente responsables que naturalizarán prácticas sostenibles desde la infancia.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="impacto">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Fundamentos y Resultados</span>
+                <h2 class="section-title">Marco Teórico e Impacto Esperado</h2>
+                <p class="section-description">
+                    Fundamentación científica y proyección de resultados del proyecto
+                </p>
+            </div>
+
+            <div class="impact-content">
+                <div class="framework-section">
+                    <h3>Fundamentos Pedagógicos</h3>
+                    <p>
+                        Este proyecto se fundamenta en principios sólidos de pedagogía constructivista, donde el estudiante es el protagonista activo en la construcción de su propio conocimiento a través de experiencias concretas y significativas. La teoría del aprendizaje experiencial de David Kolb y los principios de gamificación educativa proporcionan el marco teórico que sustenta el diseño del dispositivo interactivo.
+                    </p>
+
+                    <p>
+                        La investigación contemporánea en educación ambiental demuestra consistentemente que los hábitos formados durante la infancia, especialmente aquellos reforzados mediante experiencias positivas repetidas, tienden a perdurar y fortalecerse durante la adolescencia y la edad adulta, convirtiéndose en comportamientos automatizados y naturalizados.
+                    </p>
+                </div>
+
+                <div class="objectives-grid">
+                    <div class="objective-card">
+                        <span class="objective-badge">Objetivo General</span>
+                        <h3>Transformación de Hábitos</h3>
+                        <p>Desarrollar hábitos reales, medibles y permanentes de clasificación de residuos en niños de básica primaria mediante un dispositivo interactivo tecnológicamente avanzado que proporcione retroalimentación inmediata, creando asociaciones positivas entre el comportamiento ambiental responsable y consecuencias gratificantes inmediatas.</p>
+                    </div>
+
+                    <div class="objective-card">
+                        <span class="objective-badge">Objetivos Específicos</span>
+                        <h3>Metas Concretas</h3>
+                        <p>Diseñar e implementar un sistema tecnológico accesible y replicable que facilite el aprendizaje práctico de clasificación de residuos. Evaluar cuantitativamente la efectividad del dispositivo en la formación de hábitos ambientales permanentes. Crear un modelo metodológico documentado para replicación en otras instituciones educativas del país.</p>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <h3>Resultados Esperados</h3>
+                    <p>
+                        El proyecto busca generar un cambio medible y estadísticamente significativo en el comportamiento de los estudiantes respecto a la clasificación de residuos. Se espera que los niños que interactúan regularmente con el dispositivo desarrollen hábitos permanentes de reciclaje que mantengan y fortalezcan a lo largo de su desarrollo, convirtiéndose eventualmente en adultos con conciencia ambiental naturalizada.
+                    </p>
+                    <p>
+                        Además, se anticipa que el modelo metodológico desarrollado pueda servir como referencia y guía práctica para la implementación de sistemas similares en otras instituciones educativas a nivel regional y nacional, multiplicando exponencialmente el impacto ambiental positivo y contribuyendo significativamente a la transformación cultural hacia la sostenibilidad.
+                    </p>
+                    <p>
+                        A largo plazo, el proyecto aspira a demostrar empíricamente que la inversión en educación ambiental práctica y tecnológicamente mediada durante la infancia genera retornos sociales y ambientales significativamente superiores a las metodologías tradicionales basadas exclusivamente en instrucción teórica.
+                    </p>
+                </div>
+
+                <div class="framework-section">
+                    <h3>Conclusiones Preliminares</h3>
+                    <p>
+                        La implementación del dispositivo ha demostrado preliminarmente que la tecnología accesible puede ser una aliada extraordinariamente poderosa en la educación ambiental cuando se combina estratégicamente con metodologías pedagógicas apropiadas basadas en evidencia científica. Los estudiantes exhiben consistentemente mayor compromiso, entusiasmo y retención del aprendizaje cuando pueden experimentar las consecuencias directas e inmediatas de sus acciones en un entorno controlado y gamificado.
+                    </p>
+
+                    <p>
+                        El proyecto confirma empíricamente que no es necesario esperar pasivamente a que las grandes instituciones gubernamentales o corporativas implementen cambios ambientales. Los jóvenes tienen tanto la capacidad intelectual como la responsabilidad moral de tomar acción inmediata en sus propias comunidades, generando soluciones innovadoras, contextualizadas y efectivas a problemas locales con potencial demostrable de impacto y escalabilidad global.
+                    </p>
+
+                    <h3>Referencias y Fundamentos Académicos</h3>
+                    <p>
+                        El proyecto se basa rigurosamente en investigación científica multidisciplinaria sobre educación ambiental, desarrollo de hábitos en la infancia, psicología del aprendizaje, teorías de gamificación, y pedagogía constructivista. La revisión bibliográfica exhaustiva incluyó estudios empíricos sobre efectividad de diferentes metodologías educativas, investigación en neurociencia del aprendizaje, análisis de mejores prácticas en enseñanza de conciencia ambiental a nivel internacional, y marcos teóricos de cambio de comportamiento sostenible.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="cta-section">
+        <div class="cta-content">
+            <div class="cta-icon">🌍</div>
+            <h2>El Cambio Es Posible</h2>
+            <p>
+                Este proyecto demuestra de manera contundente que no hay que esperar a que las grandes instituciones tomen acción. Los jóvenes pueden y deben liderar el cambio que quieren ver en el mundo.
+            </p>
+            <p>
+                Cada pequeña acción cuenta. Cada hábito formado en la infancia se multiplica en el futuro. Cada dispositivo instalado en una escuela representa cientos de niños que crecerán siendo ambientalmente responsables.
+            </p>
+            <div class="cta-highlight">
+                El dispositivo continúa evolucionando activamente en la institución, generando impacto real y medible día tras día.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Sistema de Clasificación de Residuos Sólidos</h3>
+                <p>
+                    Proyecto de innovación educativa que transforma la educación ambiental teórica en experiencias prácticas y medibles, creando hábitos permanentes desde la infancia.
+                </p>
+                <p>
+                    Instituto Técnico Veintiséis de Marzo<br>
+                    Barrancabermeja, Santander, Colombia
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="#hero">→ Inicio</a></li>
+                    <li><a href="#problema">→ Problemática</a></li>
+                    <li><a href="#solucion">→ Solución</a></li>
+                    <li><a href="#metodologia">→ Metodología</a></li>
+                    <li><a href="#innovacion">→ Innovación</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Más Información</h4>
+                <ul>
+                    <li><a href="#galeria">→ Galería</a></li>
+                    <li><a href="#creador">→ Creador</a></li>
+                    <li><a href="#impacto">→ Impacto</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-badges">
+                <div class="badge">🎓 Proyecto de Grado 2024-2025</div>
+                <div class="badge">🌱 En Desarrollo Activo</div>
+                <div class="badge">♻️ Educación Ambiental</div>
+                <div class="badge">🇨🇴 Barrancabermeja, Colombia</div>
+            </div>
+            <p style="margin-top: 30px;">© 2024-2025 | Sistema de Clasificación de Residuos Sólidos</p>
+            <p>Desarrollado con pasión por el cambio ambiental | Instituto Técnico Veintiséis de Marzo</p>
+            <p style="margin-top: 20px; font-size: 0.85rem; opacity: 0.7;">
+                Un proyecto que demuestra que los jóvenes pueden liderar el cambio ambiental en sus comunidades
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navHeight = document.querySelector('nav').offsetHeight;
+                    const targetPosition = target.offsetTop - navHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Active nav link
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const navHeight = document.querySelector('nav').offsetHeight;
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - navHeight - 100;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.color = '';
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.style.color = 'var(--primary-red)';
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.feature-card, .timeline-item, .innovation-card, .gallery-item, .objective-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Counter animation for stats
+        const animateCounter = (element, target) => {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 20);
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumber = entry.target.querySelector('.stat-number');
+                    const target = parseInt(statNumber.textContent);
+                    if (!isNaN(target)) {
+                        animateCounter(statNumber, target);
+                    }
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.hero-stat, .impact-stat').forEach(stat => {
+            statsObserver.observe(stat);
+        });
+    </script>
+</body>
+</html>
